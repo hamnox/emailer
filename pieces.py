@@ -51,7 +51,7 @@ def hard_constraint_check(people, constraints):
 def pair_people(people, constraints):
     """take list of people, constraint functions, return list of 2-tuples of people"""
 # stub
-    return [(people[0], people[1])]
+    return [(Person("fake1","2@3.org"), Person("fake2","3@4.com"))]
 
     hard_oks = hard_constraint_check(people, constraints)
     # would prefer these were sorted by number of constraints
