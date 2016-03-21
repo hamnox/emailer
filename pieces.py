@@ -17,39 +17,16 @@ def datefromoffset(nextbasedate, offset):
 
 
 
-
-
- 
 class Person:
     # want to keep a list of all people
-    count = 0
     def __init__(self, name, email):
         self.name = name
         self.email = email
         self.active = True
         self.availability = None
-        count += 1
     def deactivate(self):
         self.active = False
 
-
-
-
-
-
-def brute_pair_people(people, constraints):
-    """list of people objects, list of constraint functions -> tuples of pairings that match"""
-    return (people[0], people[1])
-
-#stub 
-    available_pool = people
-    tries = 0
-    while avilable_pool != None:
-        while tries < 5:
-            pass
-        # incomplete
-
-    # assert constraints
 
 def hard_constraint_check(people, constraints):
     """takes list of people, list of constraint functions -> tuple of person &
@@ -71,6 +48,28 @@ def hard_constraint_check(people, constraints):
         matches.append((person, person_matches))
     return matches 
 
+def pair_people(people, constraints):
+    """take list of people, constraint functions, return list of 2-tuples of people"""
+# stub
+    return [(people[0], people[1])]
+
+    hard_oks = hard_constraint_check(people, constraints)
+    # would prefer these were sorted by number of constraints
+    pool = people
+    matched = []
+
+    while len(pool) > 0:
+        pass
+
+
+__test_person_1 = Person("paul", "werd@gmail.com")
+__test_person_2 = Person("me", "me@me.org")
+__test_pairing = pair_people([__test_person_1, __test_person_2], lambda x: True)
+
+# these only pass by coincidence right now
+# assert len(__test_pairing) == 1
+# assert __test_person_1 in __test_pairing[0]
+# assert __test_person_2 in __test_pairing[0]
 
 # ----------------------------------------------
 #                    TESTS

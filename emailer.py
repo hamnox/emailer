@@ -14,9 +14,6 @@ from email.MIMEText import MIMEText
 fromaddr = "mheisey.nox@gmail.com"
 toaddr = "THE EMAIL ADDRESS TO SEND TO" # TODO: Swapping out
 
-
-
-
 server = smtplib.SMTP('smtp.gmail.com', 587)
 server.starttls()
 server.login(fromaddr, "0bs1d14n4 n0x")
@@ -57,3 +54,4 @@ def email_generator(from_email, to_email):
     # test sender
         # server responds
         # emails send
+
