@@ -27,10 +27,11 @@ class Person:
         # this is horribly hacky and I don't know if it will work
         # http://stackoverflow.com/questions/1098549/proper-way-to-use-kwargs-in-python
 
-    def __init__(self):
-        self.name = "name" # want to gen random numbers
-        self.email = "email@server.com" # want to make a random number
+    def __init__(self, email="email@server.com", name="name"):
+        self.name = name # want to gen random numbers
+        self.email = email # want to make a random number
         self.availability = Availability("All")
+        self.active = True
         self.contact_preferences = {"Skype":True, "Google Hangouts":True, "Phone Call":True,
                 "SMS":True, "Emails":True, "Face to face":True}
         self.skype = None
@@ -44,18 +45,26 @@ class Person:
         self.metadebug = False # function
         self.notes = None
 
-    """    def __init__(self, email, name, **kwargs):
-            self.name = name
-            self.email = email
-            self.active = kwargs.get('active',True)
-            self.availability = kwargs.get('availability',True)
-            self.contact_preferences = kwargs.get('contact_preferences')
-    """
+
     def deactivate(self):
         self.active = False
     def to_dict(self):
 #        http://www.blog.pythonlibrary.org/2013/01/11/how-to-get-a-list-of-class-attributes/
         return self.__dict__()
+    # stub
+    def make_availability(self, spans):
+        """ takes a list of span times as [((day, hour), (day, hour)),..] and returns an Availability
+            containing those times. WISHLIST: make a mash availability fn, subtract avail. function"""
+        newAvail = Availability()
+        for span in spans:
+            t1 = span[0][0] * 24 + span[0][1]
+            t2 = span[1][0] * 24 + span[1][1]
+            newAvail.add_span(t1, t2)
+        return newAvail
+
+
+
+
 
 
 class Availability:
@@ -63,10 +72,10 @@ class Availability:
     debug_length = 1
     available_span = 24*14
 
-    def __init__(self):
-        self.times = []
-
-    def __init__(self, t1, t2=None):
+    def __init__(self, t1=None, t2=None):
+        if t1 == None:
+            self.times = []
+            return
         if t1 == "All":
             t1 = 0
             t2 = Availability.available_span
@@ -158,7 +167,7 @@ def save_to_file(data):
 
 def _get_pref(name):
     temp = raw_input("%s? y/N: " % (name))
-    if temp.lower() == "y"
+    if temp.lower() == "y":
         return True
     else:
         return False
@@ -286,7 +295,7 @@ def sendemail(recipient, message):
 
 def test():
     assert Sendgrid_API_key != None
-#     _person_1 = Person("paul", "werd@gmail.com")
+    person_1 = Person("paul", "werd@gmail.com")
 #     _person_2 = Person("me", "me@me.org")
 #     __test_pairing = pair_people([_person_1, _person_2], lambda x: True)
 
@@ -306,6 +315,13 @@ def test():
     pt = timezone('America/Los_Angeles')
     __test_date = pt.localize(datetime(2016,03,21,15,30,0,0))
     assert datestring(__test_date) == "Monday, March 21. 03:30PM PDT"
+
+    _availability_3 = person_1.make_availability([((3,2), (4,1)),((1,0),(2,0))])
+    assert len(_availability_3.times) == 2
+    # mispelled var name
+    assert _availability_3.times[0] == [timedelta(days=3, hours=2), timedelta(days=4, hours=1)]
+    assert _availability_3.times[1] == [timedelta(days=1), timedelta(days=2)]
+
 
 
 
