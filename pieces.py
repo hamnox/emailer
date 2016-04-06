@@ -1,5 +1,6 @@
 from datetime import datetime, timedelta
 from pytz import timezone
+import json
 # http://pythonhosted.org/pytz/
 # list of timezones codes is available here: http://stackoverflow.com/questions/13866926/python-pytz-list-of-timezones
 
@@ -44,8 +45,6 @@ class Person:
         self.blurb = "This is a person."
         self.metadebug = False # function
         self.notes = None
-
-
     def deactivate(self):
         self.active = False
     def to_dict(self):
@@ -61,6 +60,33 @@ class Person:
             t2 = span[1][0] * 24 + span[1][1]
             newAvail.add_span(t1, t2)
         return newAvail
+    # stub
+
+def person_from_json(data_object):
+    """given a JSON object approximating a person, return a person object!"""
+    lePerson = Person()
+    # dunno if python json object follows same rules as javascript dictionaries
+    lePerson.name = data_object['name'] # want to gen random numbers
+    lePerson.email = data_object['email'] # want to make a random number
+    import re 
+    spans = re.findall("\[(\[(\d+), (\d+)\])*?\d\]", data_object['availability'])
+                # %i - %i" % (x.total_seconds()/3600, y.total_seconds()/3600) for x, y in self.times].__str__()
+    lePerson.availability = lePerson.make_availability(spans)
+    # lePerson.active = data_object['active']
+    lePerson.active = True
+    lePerson.contact_preferences = data_object['contact_preferences']
+    lePerson.skype = data_object['skype']
+    lePerson.hangouts = data_object['hangouts']
+    lePerson.phone = data_object['phone']
+    lePerson.mobile = data_object['mobile']
+    lePerson.location = data_object['location']
+    lePerson.timezone = data_object['timezone']
+    lePerson.other = data_object['timezone']
+    lePerson.blurb = data_object['blurb']
+    lePerson.metadebug = data_object['metadebug']
+    lePerson.notes = data_object['notes']
+    return Person()
+        
 
 
 
@@ -151,7 +177,6 @@ class Availability:
 
 
 __SAVEFILENAME = "base_emailer_data.json"
-import json
 class MyEncoder(json.JSONEncoder):
     def default(self, o):
         if isinstance(o,Availability):
@@ -292,8 +317,18 @@ def sendemail(recipient, message):
 # ----------------------------------------------
 #                    TESTS
 # ----------------------------------------------
+def test_fromJSON():
+    leobjects = []
+    with open('old_user_data.json', 'r') as datafile:
+        leobjects = json.load(datafile)
+    people = []
+    for leobject in leobjects:
+        people.append(person_from_json(leobject))
+    print people[0].availability
+
 
 def test():
+    test_fromJSON()
     assert Sendgrid_API_key != None
     person_1 = Person("paul", "werd@gmail.com")
 #     _person_2 = Person("me", "me@me.org")
@@ -333,5 +368,5 @@ if __name__ == "__main__":
     print "testing..."
     test()
     print "passed!"
-    get_me()
+    # get_me()
 
