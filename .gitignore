@@ -1,0 +1,4 @@
+.idea/
+*user_data.json
+*gmail_template.*
+sendgrid.key
