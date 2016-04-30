@@ -140,8 +140,6 @@ def person_from_json(data_object):
     # this will save as an offset off of pacific time
 
 
-
-
 # for inputting, need a way to print the names of people objects in a list or dict
 # DONE: for inputting, need a function to interpret
 # for inputting, want a way to save pairings and their offsets to a file
@@ -240,6 +238,18 @@ def parse_offset_input(string):
     day = weeknums[results[0][1]]
     hour = int(results[0][2]) + float(results[0][3])/60.0
     return (week * 7 + day) * 24 + hour
+
+# stub
+def input_appointments(people):
+    """[<person>,..] -> [{'partners': (<person>, <person>), 'datetime': Datetime},..]
+    Takes a list of available people, displays it. asks the user to pair them up and
+    give a time for them to meet in Pacific Time. displays remaining options until
+    all members are used. (displays all again if only 1 left)"""
+    return [{'partners': (Person("a@b"), Person("c@d")), 'datetime': datetime.now()}]
+
+# for inputting, need a way to print the names of people objects in a list or dict
+# DONE: for inputting, need a function to interpret
+# for inputting, want a way to save pairings and their offsets to a file
 
 
 __SAVEFILENAME = "base_emailer_data.json"
@@ -406,6 +416,16 @@ def test_fromJSON():
     print people[0].availability
 
 
+def test_input_appointments():
+    appointments = input_appointments([Person(), Person(), Person()])
+    assert isinstance(appointments, list)
+    if len(appointments) == 0:
+        assert appointments == [-1]
+        return
+    for appt in appointments:
+        assert isinstance(appt['partners'][0], Person)
+        assert isinstance(appt['partners'][1], Person)
+        assert isinstance(appt['datetime'], datetime)
 def test_parse_offset_input():
     assert parse_offset_input("2 Sun. 10:00") == 178
     assert parse_offset_input("2 wed 18:00") == 258
@@ -437,6 +457,7 @@ def test_send_email():
 
 
 def test():
+    test_input_appointments()
     test_parse_offset_input()
     # test_send_email()
     test_fromJSON()
@@ -467,6 +488,7 @@ def test():
     assert len(_availability_3.times) == 2
     assert _availability_3.times[0] == [timedelta(days=3, hours=2), timedelta(days=4, hours=1)]
     assert _availability_3.times[1] == [timedelta(days=1), timedelta(days=2)]
+
 
 
 
